@@ -12,29 +12,22 @@ import { TextReveal } from "@/components/text-reveal"
 import { ContactBackground } from "@/components/contact-background"
 
 export default function Portfolio() {
-  const { scrollYProgress } = useScroll()
-   const [mounted, setMounted] = useState(false)
-  useEffect(() => setMounted(true), [])
   const [isMenuOpen, setIsMenuOpen] = useState(false)
   const [activeSection, setActiveSection] = useState("home")
   const [isScrolled, setIsScrolled] = useState(false)
+  const { scrollYProgress } = useScroll()
   const heroRef = useRef(null)
   const aboutRef = useRef(null)
   const projectsRef = useRef(null)
   const skillsRef = useRef(null)
   const contactRef = useRef(null)
 
-const isHeroInViewRaw = useInView(heroRef, { margin: "-50%" })
-  const y1Raw = useTransform(scrollYProgress, [0, 1], [0, -50])
-  const y2Raw = useTransform(scrollYProgress, [0, 1], [0, -100])
-  const y3Raw = useTransform(scrollYProgress, [0, 1], [0, -150])
-  const opacityRaw = useTransform(scrollYProgress, [0, 0.2], [1, 0])
+  const isHeroInView = useInView(heroRef, { margin: "-50%" })
 
-  const isHeroInView = mounted && typeof window !== "undefined" ? isHeroInViewRaw : false
-  const y1 = mounted && typeof window !== "undefined" ? y1Raw : { get: () => 0 }
-  const y2 = mounted && typeof window !== "undefined" ? y2Raw : { get: () => 0 }
-  const y3 = mounted && typeof window !== "undefined" ? y3Raw : { get: () => 0 }
-  const opacity = mounted && typeof window !== "undefined" ? opacityRaw : { get: () => 1 }
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -50])
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -100])
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, -150])
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
 
   useEffect(() => {
     const handleScroll = () => {
@@ -44,7 +37,6 @@ const isHeroInViewRaw = useInView(heroRef, { margin: "-50%" })
       setIsScrolled(window.scrollY > 50)
 
       for (const section of sections) {
-         if (typeof window === "undefined" || typeof document === "undefined") return
         const element = document.getElementById(section)
         if (element) {
           const offsetTop = element.offsetTop
@@ -62,9 +54,7 @@ const isHeroInViewRaw = useInView(heroRef, { margin: "-50%" })
     return () => window.removeEventListener("scroll", handleScroll)
   }, [])
 
-    const scrollToSection = (sectionId: string) => {
-    if (!mounted || typeof document === "undefined") return
-
+  const scrollToSection = (sectionId: string) => {
     const element = document.getElementById(sectionId)
     if (element) {
       element.scrollIntoView({ behavior: "smooth" })
@@ -72,24 +62,9 @@ const isHeroInViewRaw = useInView(heroRef, { margin: "-50%" })
     setIsMenuOpen(false)
   }
 
-  if (!mounted) {
-    return (
-<div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50 to-indigo-100 dark:from-slate-900 dark:via-blue-900 dark:to-indigo-900 flex items-center justify-center">
-        <div className="text-center">
-             <h1 className="text-5xl md:text-7xl font-bold bg-gradient-to-r from-blue-600 to-cyan-500 bg-clip-text text-transparent mb-6">
-            Arsalan Reshi
-          </h1>
-            <p className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 font-medium">
-              Crafting Digital Experiences
-            </p>
-          </div>
-        </div>
-      
-    )
-  }
   const projects = [
     {
-      title: "Dashboard",
+       title: "Dashboard",
       description:
         "A responsive data management tool built with React, Node.js, and MongoDB, featuring secure authentication, role-based access, and interactive analytics.",
       image: "/dashboard.png?height=300&width=400",
@@ -168,8 +143,6 @@ const isHeroInViewRaw = useInView(heroRef, { margin: "-50%" })
     <div className="min-h-screen bg-gradient-premium-dark dark:bg-gradient-premium-dark light:bg-gradient-premium-light relative overflow-x-hidden transition-colors duration-500">
       <ScrollProgress />
       <AnimatedBackground />
-      {mounted && (
-        <>
 
       <motion.div
         style={{ y: y1, opacity }}
@@ -183,8 +156,6 @@ const isHeroInViewRaw = useInView(heroRef, { margin: "-50%" })
         style={{ y: y3, opacity }}
         className="fixed top-1/2 left-1/2 transform -translate-x-1/2 -translate-y-1/2 w-80 h-80 bg-indigo-500/20 dark:bg-indigo-500/20 light:bg-indigo-400/15 rounded-full blur-3xl"
       />
-      </>
-      )}
 
       <motion.nav
         initial={{ y: -100, opacity: 0 }}
@@ -322,7 +293,7 @@ const isHeroInViewRaw = useInView(heroRef, { margin: "-50%" })
           </motion.div>
         </div>
 
-       {mounted && isHeroInView && (
+        {isHeroInView && (
           <motion.div
             initial={{ opacity: 0, y: 20 }}
             animate={{ opacity: 1, y: 0 }}
@@ -368,7 +339,7 @@ const isHeroInViewRaw = useInView(heroRef, { margin: "-50%" })
                   transition={{ duration: 0.6, delay: 0.4 }}
                   className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed"
                 >
-                 I’m a Front-End Web Developer with a passion for crafting clean, responsive, and user-friendly interfaces. I specialize in turning design concepts into interactive, accessible websites that not only look great but also deliver a smooth, intuitive user experience.
+                  I’m a Front-End Web Developer with a passion for crafting clean, responsive, and user-friendly interfaces. I specialize in turning design concepts into interactive, accessible websites that not only look great but also deliver a smooth, intuitive user experience.
                 </motion.p>
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
@@ -377,19 +348,14 @@ const isHeroInViewRaw = useInView(heroRef, { margin: "-50%" })
                   transition={{ duration: 0.6, delay: 0.6 }}
                   className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed"
                 >
-                 With expertise in HTML, CSS, JavaScript, and modern frameworks like React, I love building projects that merge creativity with functionality. I believe in writing maintainable code, optimizing performance, and always keeping the end-user in mind.
-
-When I’m not coding, you can usually find me exploring new design trends, experimenting with animations, or tinkering with side projects that push my skills further. My goal is simple: create web experiences that people enjoy using.
+                  With expertise in HTML, CSS, JavaScript, and modern frameworks like React, I love building projects that merge creativity with functionality. I believe in writing maintainable code, optimizing performance, and always keeping the end-user in mind.
                 </motion.p>
-                 <motion.p
+                <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
-                  transition={{ duration: 0.6, delay: 0.6 }}
-                  className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed"
-                >
-                
-
+                  transition={{ duration: 0.6, delay: 0.8 }}
+                  className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
 When I’m not coding, you can usually find me exploring new design trends, experimenting with animations, or tinkering with side projects that push my skills further. My goal is simple: create web experiences that people enjoy using.
                 </motion.p>
                 <motion.div
@@ -422,7 +388,7 @@ When I’m not coding, you can usually find me exploring new design trends, expe
               >
                 <motion.div
                   whileHover={{ scale: 1.05, rotateY: 5, rotateX: 5 }}
-                  transition={{ duration: 0.4, ease: "easeOut" }}
+                  transition={{ duration: 0.3 }}
                   className="glass-card p-6 rounded-xl transform-gpu"
                   style={{ transformStyle: "preserve-3d" }}
                 >
@@ -467,7 +433,6 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                     className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
                     whileHover={{ opacity: 0.8 }}
                     transition={{ duration: 0.3 }}
-                    
                   />
                 </div>
                 <motion.h3
@@ -693,7 +658,7 @@ When I’m not coding, you can usually find me exploring new design trends, expe
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.2 }}
           >
-            © {new Date().getFullYear()} Arsalan Reshi. Crafted with passion and modern web technologies.
+            © {new Date().getFullYear()}  Arsalan Reshi. Crafted with passion and modern web technologies.
           </motion.p>
         </div>
       </motion.footer>
