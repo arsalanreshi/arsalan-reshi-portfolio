@@ -13,7 +13,7 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: "Arsalan Reshi - Portfolio",
-  description: "Full Stack Developer & UI/UX Designer Portfolio",
+  description: "Frontend Developer with a Passion for User Experience",
   generator: "v0.app",
 }
 
