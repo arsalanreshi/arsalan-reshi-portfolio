@@ -5,8 +5,13 @@ import { useEffect, useState } from "react"
 
 export function AnimatedBackground() {
   const [mousePosition, setMousePosition] = useState({ x: 0, y: 0 })
+  const [windowSize, setWindowSize] = useState({ width: 1920, height: 1080 })
 
   useEffect(() => {
+    if (typeof window === 'undefined') return
+
+    setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+
     const handleMouseMove = (e: MouseEvent) => {
       setMousePosition({
         x: e.clientX / window.innerWidth,
@@ -14,8 +19,16 @@ export function AnimatedBackground() {
       })
     }
 
+    const handleResize = () => {
+      setWindowSize({ width: window.innerWidth, height: window.innerHeight })
+    }
+
     window.addEventListener("mousemove", handleMouseMove)
-    return () => window.removeEventListener("mousemove", handleMouseMove)
+    window.addEventListener("resize", handleResize)
+    return () => {
+      window.removeEventListener("mousemove", handleMouseMove)
+      window.removeEventListener("resize", handleResize)
+    }
   }, [])
 
   return (
@@ -25,12 +38,12 @@ export function AnimatedBackground() {
           key={i}
           className="absolute w-2 h-2 bg-blue-400/20 dark:bg-blue-400/30 rounded-full"
           initial={{
-            x: Math.random() * window.innerWidth,
-            y: Math.random() * window.innerHeight,
+            x: Math.random() * windowSize.width,
+            y: Math.random() * windowSize.height,
           }}
           animate={{
-            x: mousePosition.x * window.innerWidth + (Math.random() - 0.5) * 100,
-            y: mousePosition.y * window.innerHeight + (Math.random() - 0.5) * 100,
+            x: mousePosition.x * windowSize.width + (Math.random() - 0.5) * 100,
+            y: mousePosition.y * windowSize.height + (Math.random() - 0.5) * 100,
           }}
           transition={{
             duration: 2 + Math.random() * 2,

@@ -1,86 +1,99 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
-import { Mail, Github, Linkedin, ExternalLink, Menu, X, ArrowDown } from "lucide-react"
-import { motion, useScroll, useTransform, useInView } from "framer-motion"
-import { useRef } from "react"
-import { ThemeToggle } from "@/components/theme-toggle"
-import { AnimatedBackground } from "@/components/animated-background"
-import { ScrollProgress } from "@/components/scroll-progress"
-import { MagneticButton } from "@/components/magnetic-button"
-import { TextReveal } from "@/components/text-reveal"
-import { ContactBackground } from "@/components/contact-background"
+import { useState, useEffect } from "react";
+import {
+  Mail,
+  Github,
+  Linkedin,
+  ExternalLink,
+  Menu,
+  X,
+  ArrowDown,
+} from "lucide-react";
+import { motion, useScroll, useTransform, useInView } from "framer-motion";
+import { useRef } from "react";
+import { ThemeToggle } from "@/components/theme-toggle";
+import { AnimatedBackground } from "@/components/animated-background";
+import { ScrollProgress } from "@/components/scroll-progress";
+import { MagneticButton } from "@/components/magnetic-button";
+import { TextReveal } from "@/components/text-reveal";
+import { ContactBackground } from "@/components/contact-background";
 
 export default function Portfolio() {
-  const [isMenuOpen, setIsMenuOpen] = useState(false)
-  const [activeSection, setActiveSection] = useState("home")
-  const [isScrolled, setIsScrolled] = useState(false)
-  const { scrollYProgress } = useScroll()
-  const heroRef = useRef(null)
-  const aboutRef = useRef(null)
-  const projectsRef = useRef(null)
-  const skillsRef = useRef(null)
-  const contactRef = useRef(null)
+  const [isMenuOpen, setIsMenuOpen] = useState(false);
+  const [activeSection, setActiveSection] = useState("home");
+  const [isScrolled, setIsScrolled] = useState(false);
+  const { scrollYProgress } = useScroll();
+  const heroRef = useRef(null);
+  const aboutRef = useRef(null);
+  const projectsRef = useRef(null);
+  const skillsRef = useRef(null);
+  const contactRef = useRef(null);
 
-  const isHeroInView = useInView(heroRef, { margin: "-50%" })
+  const isHeroInView = useInView(heroRef, { margin: "-50%" });
 
-  const y1 = useTransform(scrollYProgress, [0, 1], [0, -50])
-  const y2 = useTransform(scrollYProgress, [0, 1], [0, -100])
-  const y3 = useTransform(scrollYProgress, [0, 1], [0, -150])
-  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0])
+  const y1 = useTransform(scrollYProgress, [0, 1], [0, -50]);
+  const y2 = useTransform(scrollYProgress, [0, 1], [0, -100]);
+  const y3 = useTransform(scrollYProgress, [0, 1], [0, -150]);
+  const opacity = useTransform(scrollYProgress, [0, 0.2], [1, 0]);
 
   useEffect(() => {
-    const handleScroll = () => {
-      const sections = ["home", "about", "projects", "skills", "contact"]
-      const scrollPosition = window.scrollY + 100
+    if (typeof window === "undefined") return;
 
-      setIsScrolled(window.scrollY > 50)
+    const handleScroll = () => {
+      const sections = ["home", "about", "projects", "skills", "contact"];
+      const scrollPosition = window.scrollY + 100;
+
+      setIsScrolled(window.scrollY > 50);
 
       for (const section of sections) {
-        const element = document.getElementById(section)
+        const element = document.getElementById(section);
         if (element) {
-          const offsetTop = element.offsetTop
-          const offsetHeight = element.offsetHeight
+          const offsetTop = element.offsetTop;
+          const offsetHeight = element.offsetHeight;
 
-          if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
-            setActiveSection(section)
-            break
+          if (
+            scrollPosition >= offsetTop &&
+            scrollPosition < offsetTop + offsetHeight
+          ) {
+            setActiveSection(section);
+            break;
           }
         }
       }
-    }
+    };
 
-    window.addEventListener("scroll", handleScroll)
-    return () => window.removeEventListener("scroll", handleScroll)
-  }, [])
+    window.addEventListener("scroll", handleScroll);
+    return () => window.removeEventListener("scroll", handleScroll);
+  }, []);
 
   const scrollToSection = (sectionId: string) => {
-    const element = document.getElementById(sectionId)
+    const element = document.getElementById(sectionId);
     if (element) {
-      element.scrollIntoView({ behavior: "smooth" })
+      element.scrollIntoView({ behavior: "smooth" });
     }
-    setIsMenuOpen(false)
-  }
+    setIsMenuOpen(false);
+  };
 
   const projects = [
     {
-       title: "Dashboard",
+      title: "Dashboard",
       description:
         "A responsive data management tool built with React, Node.js, and MongoDB, featuring secure authentication, role-based access, and interactive analytics.",
       image: "/dashboard.png?height=300&width=400",
       tech: ["React", "Node.js", "MongoDB"],
       link: "#",
     },
-  
+
     {
       title: "Personal Portfolio",
       description:
         "A personal portfolio website showcasing my projects, skills, and experience.",
-      image: '/port.png?height=300&width=400',
-      tech: ["JavaScript", "React",],
+      image: "/port.png?height=300&width=400",
+      tech: ["JavaScript", "React"],
       link: "#",
     },
-  ]
+  ];
 
   const skills = [
     { name: "JavaScript", level: 90 },
@@ -91,7 +104,7 @@ export default function Portfolio() {
     { name: "MongoDB", level: 60 },
     { name: "Git", level: 85 },
     { name: "UI/UX Design", level: 78 },
-  ]
+  ];
 
   const containerVariants = {
     hidden: { opacity: 0 },
@@ -102,7 +115,7 @@ export default function Portfolio() {
         delayChildren: 0.2,
       },
     },
-  }
+  };
 
   const itemVariants = {
     hidden: { opacity: 0, y: 30, scale: 0.9 },
@@ -115,7 +128,7 @@ export default function Portfolio() {
         ease: [0.25, 0.46, 0.45, 0.94],
       },
     },
-  }
+  };
 
   const cardVariants = {
     hidden: { opacity: 0, scale: 0.8, rotateY: -15 },
@@ -137,7 +150,7 @@ export default function Portfolio() {
         ease: "easeOut",
       },
     },
-  }
+  };
 
   return (
     <div className="min-h-screen bg-gradient-premium-dark dark:bg-gradient-premium-dark light:bg-gradient-premium-light relative overflow-x-hidden transition-colors duration-500">
@@ -167,36 +180,45 @@ export default function Portfolio() {
       >
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="flex justify-between items-center py-4">
-            <motion.div whileHover={{ scale: 1.05 }} className="text-2xl font-display font-bold text-gradient-primary">
+            <motion.div
+              whileHover={{ scale: 1.05 }}
+              className="text-2xl font-display font-bold text-gradient-primary"
+            >
               Arsalan Reshi
             </motion.div>
 
             <div className="hidden md:flex items-center space-x-8">
-              {["home", "about", "projects", "skills", "contact"].map((item, index) => (
-                <motion.button
-                  key={item}
-                  initial={{ opacity: 0, y: -20 }}
-                  animate={{ opacity: 1, y: 0 }}
-                  transition={{ delay: index * 0.1 + 0.4, duration: 0.6 }}
-                  whileHover={{ scale: 1.1, y: -2 }}
-                  whileTap={{ scale: 0.95 }}
-                  onClick={() => scrollToSection(item)}
-                  className={`capitalize transition-all duration-300 font-medium relative ${
-                    activeSection === item
-                      ? "text-blue-600 dark:text-blue-400"
-                      : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
-                  }`}
-                >
-                  {item}
-                  {activeSection === item && (
-                    <motion.div
-                      layoutId="activeSection"
-                      className="absolute -bottom-1 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400"
-                      transition={{ type: "spring", stiffness: 300, damping: 30 }}
-                    />
-                  )}
-                </motion.button>
-              ))}
+              {["home", "about", "projects", "skills", "contact"].map(
+                (item, index) => (
+                  <motion.button
+                    key={item}
+                    initial={{ opacity: 0, y: -20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    transition={{ delay: index * 0.1 + 0.4, duration: 0.6 }}
+                    whileHover={{ scale: 1.1, y: -2 }}
+                    whileTap={{ scale: 0.95 }}
+                    onClick={() => scrollToSection(item)}
+                    className={`capitalize transition-all duration-300 font-medium relative ${
+                      activeSection === item
+                        ? "text-blue-600 dark:text-blue-400"
+                        : "text-gray-700 dark:text-gray-300 hover:text-blue-600 dark:hover:text-blue-400"
+                    }`}
+                  >
+                    {item}
+                    {activeSection === item && (
+                      <motion.div
+                        layoutId="activeSection"
+                        className="absolute -bottom-1 left-0 right-0 h-0.5 bg-blue-600 dark:bg-blue-400"
+                        transition={{
+                          type: "spring",
+                          stiffness: 300,
+                          damping: 30,
+                        }}
+                      />
+                    )}
+                  </motion.button>
+                )
+              )}
               <ThemeToggle />
             </div>
 
@@ -207,7 +229,10 @@ export default function Portfolio() {
                 className="text-gray-700 dark:text-white"
                 onClick={() => setIsMenuOpen(!isMenuOpen)}
               >
-                <motion.div animate={{ rotate: isMenuOpen ? 180 : 0 }} transition={{ duration: 0.3 }}>
+                <motion.div
+                  animate={{ rotate: isMenuOpen ? 180 : 0 }}
+                  transition={{ duration: 0.3 }}
+                >
                   {isMenuOpen ? <X size={24} /> : <Menu size={24} />}
                 </motion.div>
               </motion.button>
@@ -223,26 +248,32 @@ export default function Portfolio() {
               className="md:hidden glass-card mb-4 rounded-lg overflow-hidden"
             >
               <div className="px-4 py-2 space-y-2">
-                {["home", "about", "projects", "skills", "contact"].map((item, index) => (
-                  <motion.button
-                    key={item}
-                    initial={{ opacity: 0, x: -20 }}
-                    animate={{ opacity: 1, x: 0 }}
-                    transition={{ delay: index * 0.1, duration: 0.3 }}
-                    whileHover={{ x: 10, scale: 1.02 }}
-                    onClick={() => scrollToSection(item)}
-                    className="block w-full text-left capitalize text-gray-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 py-2 font-medium"
-                  >
-                    {item}
-                  </motion.button>
-                ))}
+                {["home", "about", "projects", "skills", "contact"].map(
+                  (item, index) => (
+                    <motion.button
+                      key={item}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ delay: index * 0.1, duration: 0.3 }}
+                      whileHover={{ x: 10, scale: 1.02 }}
+                      onClick={() => scrollToSection(item)}
+                      className="block w-full text-left capitalize text-gray-700 dark:text-white hover:text-blue-600 dark:hover:text-blue-400 py-2 font-medium"
+                    >
+                      {item}
+                    </motion.button>
+                  )
+                )}
               </div>
             </motion.div>
           )}
         </div>
       </motion.nav>
 
-      <section id="home" className="min-h-screen flex items-center justify-center px-4 relative" ref={heroRef}>
+      <section
+        id="home"
+        className="min-h-screen flex items-center justify-center px-4 relative"
+        ref={heroRef}
+      >
         <div className="text-center max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 50 }}
@@ -259,7 +290,10 @@ export default function Portfolio() {
               Arsalan Reshi
             </motion.h1>
 
-            <TextReveal className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 font-medium" delay={0.5}>
+            <TextReveal
+              className="text-xl md:text-2xl text-gray-600 dark:text-gray-300 mb-8 font-medium"
+              delay={0.5}
+            >
               Crafting Digital Experiences
             </TextReveal>
 
@@ -267,8 +301,8 @@ export default function Portfolio() {
               className="text-lg text-gray-500 dark:text-gray-400 mb-8 max-w-2xl mx-auto leading-relaxed"
               delay={0.7}
             >
-              Where innovation meets design. Passionate about building scalable websites that make a difference in
-              the digital world.
+              Where innovation meets design. Passionate about building scalable
+              websites that make a difference in the digital world.
             </TextReveal>
 
             <motion.div
@@ -302,10 +336,16 @@ export default function Portfolio() {
           >
             <motion.div
               animate={{ y: [0, 10, 0] }}
-              transition={{ duration: 2, repeat: Number.POSITIVE_INFINITY, ease: "easeInOut" }}
+              transition={{
+                duration: 2,
+                repeat: Number.POSITIVE_INFINITY,
+                ease: "easeInOut",
+              }}
               className="flex flex-col items-center text-gray-500 dark:text-gray-400"
             >
-              <span className="text-sm mb-2 font-medium">Scroll to explore</span>
+              <span className="text-sm mb-2 font-medium">
+                Scroll to explore
+              </span>
               <ArrowDown size={20} />
             </motion.div>
           </motion.div>
@@ -339,7 +379,11 @@ export default function Portfolio() {
                   transition={{ duration: 0.6, delay: 0.4 }}
                   className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed"
                 >
-                  I’m a Front-End Web Developer with a passion for crafting clean, responsive, and user-friendly interfaces. I specialize in turning design concepts into interactive, accessible websites that not only look great but also deliver a smooth, intuitive user experience.
+                  I’m a Front-End Web Developer with a passion for crafting
+                  clean, responsive, and user-friendly interfaces. I specialize
+                  in turning design concepts into interactive, accessible
+                  websites that not only look great but also deliver a smooth,
+                  intuitive user experience.
                 </motion.p>
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
@@ -348,15 +392,23 @@ export default function Portfolio() {
                   transition={{ duration: 0.6, delay: 0.6 }}
                   className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed"
                 >
-                  With expertise in HTML, CSS, JavaScript, and modern frameworks like React, I love building projects that merge creativity with functionality. I believe in writing maintainable code, optimizing performance, and always keeping the end-user in mind.
+                  With expertise in HTML, CSS, JavaScript, and modern frameworks
+                  like React, I love building projects that merge creativity
+                  with functionality. I believe in writing maintainable code,
+                  optimizing performance, and always keeping the end-user in
+                  mind.
                 </motion.p>
                 <motion.p
                   initial={{ opacity: 0, y: 20 }}
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ duration: 0.6, delay: 0.8 }}
-                  className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed">
-When I’m not coding, you can usually find me exploring new design trends, experimenting with animations, or tinkering with side projects that push my skills further. My goal is simple: create web experiences that people enjoy using.
+                  className="text-lg text-gray-600 dark:text-gray-300 mb-6 leading-relaxed"
+                >
+                  When I’m not coding, you can usually find me exploring new
+                  design trends, experimenting with animations, or tinkering
+                  with side projects that push my skills further. My goal is
+                  simple: create web experiences that people enjoy using.
                 </motion.p>
                 <motion.div
                   initial={{ opacity: 0, y: 20 }}
@@ -371,7 +423,11 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                       href="#"
                       whileHover={{ scale: 1.3, rotate: 10, y: -5 }}
                       whileTap={{ scale: 0.9 }}
-                      transition={{ type: "spring", stiffness: 300, damping: 20 }}
+                      transition={{
+                        type: "spring",
+                        stiffness: 300,
+                        damping: 20,
+                      }}
                       className="text-blue-600 dark:text-blue-400 hover:text-cyan-500 dark:hover:text-cyan-400 transition-colors"
                     >
                       <Icon size={24} />
@@ -392,7 +448,7 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                   className="glass-card p-6 rounded-xl transform-gpu"
                   style={{ transformStyle: "preserve-3d" }}
                 >
-                  <img src="/arsalan.png?height=400&width=400" alt="Profile" className="w-full h-auto rounded-lg" />
+                  <img src="/arsalan.PNG" alt="Profile" className="w-full h-auto rounded-lg" />
                 </motion.div>
               </motion.div>
             </div>
@@ -498,7 +554,11 @@ When I’m not coding, you can usually find me exploring new design trends, expe
               className="grid md:grid-cols-2 gap-8"
             >
               {skills.map((skill, index) => (
-                <motion.div key={index} variants={itemVariants} className="mb-6">
+                <motion.div
+                  key={index}
+                  variants={itemVariants}
+                  className="mb-6"
+                >
                   <div className="flex justify-between items-center mb-3">
                     <motion.span
                       className="text-gray-800 dark:text-white font-semibold"
@@ -570,7 +630,8 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                 className="text-lg text-gray-700 dark:text-gray-200 text-center mb-12 max-w-2xl mx-auto leading-relaxed"
                 delay={0.2}
               >
-                Ready to bring your ideas to life? Let's collaborate and create something amazing together.
+                Ready to bring your ideas to life? Let's collaborate and create
+                something amazing together.
               </TextReveal>
 
               <motion.form
@@ -582,7 +643,10 @@ When I’m not coding, you can usually find me exploring new design trends, expe
               >
                 <div className="grid md:grid-cols-2 gap-6">
                   <motion.div variants={itemVariants}>
-                    <label htmlFor="name" className="block text-gray-800 dark:text-white font-semibold mb-2">
+                    <label
+                      htmlFor="name"
+                      className="block text-gray-800 dark:text-white font-semibold mb-2"
+                    >
                       Name
                     </label>
                     <motion.input
@@ -595,7 +659,10 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                     />
                   </motion.div>
                   <motion.div variants={itemVariants}>
-                    <label htmlFor="email" className="block text-gray-800 dark:text-white font-semibold mb-2">
+                    <label
+                      htmlFor="email"
+                      className="block text-gray-800 dark:text-white font-semibold mb-2"
+                    >
                       Email
                     </label>
                     <motion.input
@@ -609,7 +676,10 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                   </motion.div>
                 </div>
                 <motion.div variants={itemVariants}>
-                  <label htmlFor="subject" className="block text-gray-800 dark:text-white font-semibold mb-2">
+                  <label
+                    htmlFor="subject"
+                    className="block text-gray-800 dark:text-white font-semibold mb-2"
+                  >
                     Subject
                   </label>
                   <motion.input
@@ -622,7 +692,10 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                   />
                 </motion.div>
                 <motion.div variants={itemVariants}>
-                  <label htmlFor="message" className="block text-gray-800 dark:text-white font-semibold mb-2">
+                  <label
+                    htmlFor="message"
+                    className="block text-gray-800 dark:text-white font-semibold mb-2"
+                  >
                     Message
                   </label>
                   <motion.textarea
@@ -658,10 +731,11 @@ When I’m not coding, you can usually find me exploring new design trends, expe
             whileHover={{ scale: 1.05 }}
             transition={{ duration: 0.2 }}
           >
-            © {new Date().getFullYear()}  Arsalan Reshi. Crafted with passion and modern web technologies.
+            © {new Date().getFullYear()} Arsalan Reshi. Crafted with passion and
+            modern web technologies.
           </motion.p>
         </div>
       </motion.footer>
     </div>
-  )
+  );
 }
