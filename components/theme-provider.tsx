@@ -1,6 +1,7 @@
 "use client"
 
 import type React from "react"
+
 import { createContext, useContext, useEffect, useState } from "react"
 
 type Theme = "dark" | "light" | "system"
@@ -29,59 +30,35 @@ export function ThemeProvider({
   storageKey = "vite-ui-theme",
   ...props
 }: ThemeProviderProps) {
-  const [theme, setTheme] = useState<Theme>(() => {
-    return defaultTheme
-  })
-  const [mounted, setMounted] = useState(false)
+  const [theme, setTheme] = useState<Theme>(defaultTheme)
 
   useEffect(() => {
-    setMounted(true)
-    if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
-      try {
-        const storedTheme = localStorage.getItem(storageKey) as Theme
-        if (storedTheme && (storedTheme === "dark" || storedTheme === "light" || storedTheme === "system")) {
-          setTheme(storedTheme)
-        }
-      } catch (error) {
-        console.warn("Failed to read theme from localStorage:", error)
-      }
+    const storedTheme = localStorage?.getItem(storageKey) as Theme
+    if (storedTheme) {
+      setTheme(storedTheme)
     }
   }, [storageKey])
 
   useEffect(() => {
-    if (!mounted || typeof window === "undefined" || typeof document === "undefined") return
+    const root = window.document.documentElement
 
-    const root = document.documentElement
     root.classList.remove("light", "dark")
 
     if (theme === "system") {
-      if (window.matchMedia) {
-        try {
-          const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
-          root.classList.add(systemTheme)
-        } catch (error) {
-          root.classList.add("dark") // fallback
-        }
-      } else {
-        root.classList.add("dark") // fallback for environments without matchMedia
-      }
+      const systemTheme = window.matchMedia("(prefers-color-scheme: dark)").matches ? "dark" : "light"
+
+      root.classList.add(systemTheme)
       return
     }
 
     root.classList.add(theme)
-  }, [theme, mounted])
+  }, [theme])
 
   const value = {
     theme,
-    setTheme: (newTheme: Theme) => {
-      if (typeof window !== "undefined" && typeof localStorage !== "undefined") {
-        try {
-          localStorage.setItem(storageKey, newTheme)
-        } catch (error) {
-          console.warn("Failed to save theme to localStorage:", error)
-        }
-      }
-      setTheme(newTheme)
+    setTheme: (theme: Theme) => {
+      localStorage?.setItem(storageKey, theme)
+      setTheme(theme)
     },
   }
 

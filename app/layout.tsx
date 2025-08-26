@@ -3,6 +3,7 @@ import type { Metadata } from "next"
 import { DM_Sans } from "next/font/google"
 import { ThemeProvider } from "@/components/theme-provider"
 import "./globals.css"
+import { Analytics } from "@vercel/analytics/react"
 
 const dmSans = DM_Sans({
   subsets: ["latin"],
@@ -13,7 +14,7 @@ const dmSans = DM_Sans({
 
 export const metadata: Metadata = {
   title: "Arsalan Reshi - Portfolio",
-  description: "Full Stack Developer & UI/UX Designer Portfolio",
+  description: "Frontend Developer with a Passion for User Experience",
   generator: "v0.app",
 }
 
@@ -25,6 +26,7 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <head>
+          <link rel="icon" href="/arsalan.PNG" />
         <style>{`
 html {
   font-family: ${dmSans.style.fontFamily};
@@ -37,6 +39,7 @@ html {
         <ThemeProvider attribute="class" defaultTheme="dark" enableSystem disableTransitionOnChange>
           {children}
         </ThemeProvider>
+        <Analytics />
       </body>
     </html>
   )
