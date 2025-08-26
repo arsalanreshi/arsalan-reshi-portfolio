@@ -76,6 +76,15 @@ export default function Portfolio() {
   };
 
   const projects = [
+
+     {
+      title: "Bookstore",
+      description:
+        "A modern full-stack bookstore management application built with Next.js and React.js, featuring secure authentication, role-based access control, and interactive analytics for efficient bookstore operations",
+      image: "/bookstore.png?height=300&width=400",
+      tech: ["React", "Node.js", "MongoDB"],
+      link: "#",
+    },
     {
       title: "Dashboard",
       description:
@@ -96,9 +105,9 @@ export default function Portfolio() {
   ];
 
   const skills = [
-    { name: "JavaScript", level: 90 },
+    { name: "JavaScript", level: 80 },
     { name: "React", level: 85 },
-    // { name: "Node.js", level: 80 },
+    { name: "Node.js", level: 50 },
     // { name: "Python", level: 75 },
     { name: "CSS/SCSS", level: 88 },
     { name: "MongoDB", level: 60 },
