@@ -511,16 +511,45 @@ html {
   background: linear-gradient(135deg, rgb(var(--accent-cyan)), rgb(var(--primary-blue)));
 }
 
-/* Responsive enhancements */
+/* Mobile performance optimizations */
 @media (max-width: 768px) {
   .glass-card {
-    backdrop-filter: blur(20px);
-    -webkit-backdrop-filter: blur(20px);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    transform: translateZ(0); /* Force hardware acceleration */
   }
 
   .glass-nav {
-    backdrop-filter: blur(16px);
-    -webkit-backdrop-filter: blur(16px);
+    backdrop-filter: blur(10px);
+    -webkit-backdrop-filter: blur(10px);
+    transform: translateZ(0);
+  }
+
+  /* Reduce motion for better mobile performance */
+  .glass-card:hover {
+    transform: translateY(-2px) translateZ(0);
+  }
+
+  /* Optimize animations on mobile */
+  * {
+    animation-duration: 0.3s !important;
+    transition-duration: 0.3s !important;
+  }
+
+  /* Reduce blur effects on older mobile devices */
+  @supports not (backdrop-filter: blur(10px)) {
+    .glass-card, .glass-nav {
+      background: rgba(255, 255, 255, 0.9);
+    }
+    .dark .glass-card, .dark .glass-nav {
+      background: rgba(0, 0, 0, 0.8);
+    }
+  }
+
+  /* Optimize image rendering */
+  img {
+    image-rendering: optimizeSpeed;
+    image-rendering: -webkit-optimize-contrast;
   }
 }
 
@@ -534,4 +563,43 @@ html {
 .glass-input:focus-visible {
   outline: 2px solid rgb(var(--primary-blue));
   outline-offset: 2px;
+}
+
+/* Performance optimizations */
+.will-change-transform {
+  will-change: transform;
+}
+
+.will-change-opacity {
+  will-change: opacity;
+}
+
+/* GPU acceleration for smooth animations */
+.gpu-accelerated {
+  transform: translateZ(0);
+  backface-visibility: hidden;
+  perspective: 1000px;
+}
+
+/* Preload critical fonts */
+@font-face {
+  font-family: 'DM Sans';
+  font-display: swap;
+}
+
+/* Critical above-the-fold styles */
+.hero-section {
+  contain: layout style paint;
+}
+
+/* Optimize for mobile touch */
+@media (hover: none) and (pointer: coarse) {
+  .glass-card:hover {
+    transform: none;
+    box-shadow: 0 8px 32px var(--glass-shadow-light), inset 0 1px 0 rgba(255, 255, 255, 0.1);
+  }
+  
+  .glass-button-primary:hover {
+    transform: none;
+  }
 }

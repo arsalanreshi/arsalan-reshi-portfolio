@@ -62,7 +62,52 @@ export default function Portfolio() {
     setIsMenuOpen(false)
   }
 
+  // Form submission handler
+  const onSubmit = async (data: ContactFormData) => {
+    setIsSubmitting(true);
+    setSubmitStatus('idle');
+    
+    try {
+      const response = await fetch('/api/contact', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
+      });
+
+      if (response.ok) {
+        setSubmitStatus('success');
+        setSubmitMessage('Thank you! Your message has been sent successfully.');
+        reset();
+      } else {
+        const errorData = await response.json();
+        setSubmitStatus('error');
+        setSubmitMessage(errorData.error || 'Failed to send message. Please try again.');
+      }
+    } catch (error) {
+      setSubmitStatus('error');
+      setSubmitMessage('Network error. Please check your connection and try again.');
+    } finally {
+      setIsSubmitting(false);
+      // Clear status after 5 seconds
+      setTimeout(() => {
+        setSubmitStatus('idle');
+        setSubmitMessage('');
+      }, 5000);
+    }
+  };
+
   const projects = [
+
+     {
+      title: "Bookstore",
+      description:
+        "A modern full-stack bookstore management application built with Next.js and React.js, featuring secure authentication, role-based access control, and interactive analytics for efficient bookstore operations",
+      image: "/bookstore.png?height=300&width=400",
+      tech: ["React", "Node.js", "MongoDB"],
+      link: "#",
+    },
     {
       title: "Dashboard",
       description:
@@ -83,9 +128,9 @@ export default function Portfolio() {
   ]
 
   const skills = [
-    { name: "JavaScript", level: 90 },
+    { name: "JavaScript", level: 80 },
     { name: "React", level: 85 },
-    // { name: "Node.js", level: 80 },
+    { name: "Node.js", level: 50 },
     // { name: "Python", level: 75 },
     { name: "CSS/SCSS", level: 88 },
     { name: "MongoDB", level: 60 },
@@ -112,7 +157,7 @@ export default function Portfolio() {
       scale: 1,
       transition: {
         duration: 0.6,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        ease: "easeOut" as const,
       },
     },
   }
@@ -125,7 +170,7 @@ export default function Portfolio() {
       rotateY: 0,
       transition: {
         duration: 0.6,
-        ease: [0.25, 0.46, 0.45, 0.94],
+        ease: "easeOut" as const,
       },
     },
     hover: {
@@ -134,7 +179,7 @@ export default function Portfolio() {
       rotateY: 5,
       transition: {
         duration: 0.3,
-        ease: "easeOut",
+        ease: "easeOut" as const,
       },
     },
   }
@@ -142,7 +187,9 @@ export default function Portfolio() {
   return (
     <div className="min-h-screen bg-gradient-premium-dark dark:bg-gradient-premium-dark light:bg-gradient-premium-light relative overflow-x-hidden transition-colors duration-500">
       <ScrollProgress />
-      <AnimatedBackground />
+      <Suspense fallback={<div className="fixed inset-0 bg-gradient-premium-dark" />}>
+        <AnimatedBackground />
+      </Suspense>
 
       <motion.div
         style={{ y: y1, opacity }}
@@ -242,7 +289,11 @@ export default function Portfolio() {
         </div>
       </motion.nav>
 
-      <section id="home" className="min-h-screen flex items-center justify-center px-4 relative" ref={heroRef}>
+      <section
+        id="home"
+        className="min-h-screen flex items-center justify-center px-4 relative hero-section"
+        ref={heroRef}
+      >
         <div className="text-center max-w-4xl mx-auto">
           <motion.div
             initial={{ opacity: 0, scale: 0.8, y: 50 }}
@@ -391,14 +442,22 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                 transition={{ duration: 0.8, delay: 0.4 }}
                 className="relative"
               >
-                <motion.div
-                  whileHover={{ scale: 1.05, rotateY: 5, rotateX: 5 }}
+                <OptimizedMotionDiv
+                  whileHover={{ scale: 1.02 }}
                   transition={{ duration: 0.3 }}
-                  className="glass-card p-6 rounded-xl transform-gpu"
-                  style={{ transformStyle: "preserve-3d" }}
+                  className="glass-card p-6 rounded-xl"
                 >
-                  <img src="/arsalan.png?height=400&width=400" alt="Profile" className="w-full h-auto rounded-lg" />
-                </motion.div>
+                  <OptimizedImage
+                    src="/arsalan.PNG"
+                    alt="Arsalan Reshi - Profile Picture"
+                    width={400}
+                    height={400}
+                    className="w-full h-auto rounded-lg"
+                    priority={false}
+                    quality={60}
+                    sizes="(max-width: 768px) 100vw, 400px"
+                  />
+                </OptimizedMotionDiv>
               </motion.div>
             </div>
           </motion.div>
@@ -427,18 +486,16 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                 style={{ transformStyle: "preserve-3d" }}
               >
                 <div className="relative mb-4 overflow-hidden rounded-lg">
-                  <motion.img
-                    whileHover={{ scale: 1.15, rotate: 2 }}
-                    transition={{ duration: 0.4, ease: "easeOut" }}
-                    src={project.image}
-                    alt={project.title}
-                    className="w-full h-48 object-cover"
+                  <OptimizedImage
+                    src={project.image.replace('?height=300&width=400', '')}
+                    alt={`${project.title} - Project Screenshot`}
+                    width={400}
+                    height={300}
+                    className="w-full h-48 object-cover transition-transform duration-300 hover:scale-105"
+                    quality={70}
+                    sizes="(max-width: 768px) 100vw, (max-width: 1200px) 50vw, 33vw"
                   />
-                  <motion.div
-                    className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent"
-                    whileHover={{ opacity: 0.8 }}
-                    transition={{ duration: 0.3 }}
-                  />
+                  <div className="absolute inset-0 bg-gradient-to-t from-black/60 to-transparent" />
                 </div>
                 <motion.h3
                   className="text-xl font-display font-bold text-gray-800 dark:text-white mb-3"
@@ -561,7 +618,9 @@ When I’m not coding, you can usually find me exploring new design trends, expe
             transition={{ duration: 0.8 }}
             className="glass-card-premium-contact p-8 md:p-12 rounded-2xl relative overflow-hidden"
           >
-            <ContactBackground />
+            <Suspense fallback={<div className="absolute inset-0 opacity-20" />}>
+              <ContactBackground />
+            </Suspense>
 
             {/* Enhanced glassmorphism overlay */}
             <div className="absolute inset-0 bg-gradient-to-br from-white/5 via-transparent to-blue-500/5 dark:from-white/3 dark:via-transparent dark:to-blue-400/10 pointer-events-none" />
@@ -584,6 +643,7 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                 whileInView="visible"
                 viewport={{ once: true }}
                 className="space-y-6"
+                onSubmit={handleSubmit(onSubmit)}
               >
                 <div className="grid md:grid-cols-2 gap-6">
                   <motion.div variants={itemVariants}>
@@ -595,9 +655,22 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                       transition={{ duration: 0.2 }}
                       type="text"
                       id="name"
+                      {...register("name", { 
+                        required: "Name is required",
+                        minLength: { value: 2, message: "Name must be at least 2 characters" }
+                      })}
                       className="w-full px-4 py-3 glass-input-enhanced rounded-lg text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none transition-all duration-300"
                       placeholder="Your Name"
                     />
+                    {errors.name && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-red-500 text-sm mt-1"
+                      >
+                        {errors.name.message}
+                      </motion.p>
+                    )}
                   </motion.div>
                   <motion.div variants={itemVariants}>
                     <label htmlFor="email" className="block text-gray-800 dark:text-white font-semibold mb-2">
@@ -608,9 +681,25 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                       transition={{ duration: 0.2 }}
                       type="email"
                       id="email"
+                      {...register("email", { 
+                        required: "Email is required",
+                        pattern: {
+                          value: /^[^\s@]+@[^\s@]+\.[^\s@]+$/,
+                          message: "Please enter a valid email address"
+                        }
+                      })}
                       className="w-full px-4 py-3 glass-input-enhanced rounded-lg text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none transition-all duration-300"
                       placeholder="your.email@example.com"
                     />
+                    {errors.email && (
+                      <motion.p
+                        initial={{ opacity: 0, y: -10 }}
+                        animate={{ opacity: 1, y: 0 }}
+                        className="text-red-500 text-sm mt-1"
+                      >
+                        {errors.email.message}
+                      </motion.p>
+                    )}
                   </motion.div>
                 </div>
                 <motion.div variants={itemVariants}>
@@ -622,9 +711,22 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                     transition={{ duration: 0.2 }}
                     type="text"
                     id="subject"
+                    {...register("subject", { 
+                      required: "Subject is required",
+                      minLength: { value: 3, message: "Subject must be at least 3 characters" }
+                    })}
                     className="w-full px-4 py-3 glass-input-enhanced rounded-lg text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none transition-all duration-300"
                     placeholder="Project Inquiry"
                   />
+                  {errors.subject && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-red-500 text-sm mt-1"
+                    >
+                      {errors.subject.message}
+                    </motion.p>
+                  )}
                 </motion.div>
                 <motion.div variants={itemVariants}>
                   <label htmlFor="message" className="block text-gray-800 dark:text-white font-semibold mb-2">
@@ -635,15 +737,69 @@ When I’m not coding, you can usually find me exploring new design trends, expe
                     transition={{ duration: 0.2 }}
                     id="message"
                     rows={6}
+                    {...register("message", { 
+                      required: "Message is required",
+                      minLength: { value: 10, message: "Message must be at least 10 characters" }
+                    })}
                     className="w-full px-4 py-3 glass-input-enhanced rounded-lg text-gray-800 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 focus:outline-none resize-none transition-all duration-300"
                     placeholder="Tell me about your project..."
                   />
+                  {errors.message && (
+                    <motion.p
+                      initial={{ opacity: 0, y: -10 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      className="text-red-500 text-sm mt-1"
+                    >
+                      {errors.message.message}
+                    </motion.p>
+                  )}
                 </motion.div>
                 <motion.div variants={itemVariants} className="text-center">
-                  <MagneticButton className="glass-button-primary-enhanced px-8 py-3 rounded-full text-white font-semibold">
-                    Send Message
-                  </MagneticButton>
+                  <button
+                    type="submit"
+                    disabled={isSubmitting}
+                    className="glass-button-primary-enhanced px-8 py-3 rounded-full text-white font-semibold disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2 transition-all duration-300 hover:scale-105"
+                  >
+                    {isSubmitting ? (
+                      <>
+                        <motion.div
+                          animate={{ rotate: 360 }}
+                          transition={{ duration: 1, repeat: Infinity, ease: "linear" }}
+                          className="w-4 h-4 border-2 border-white border-t-transparent rounded-full"
+                        />
+                        Sending...
+                      </>
+                    ) : (
+                      <>
+                        <Send size={16} />
+                        Send Message
+                      </>
+                    )}
+                  </button>
                 </motion.div>
+                
+                {/* Status Messages */}
+                {submitStatus !== 'idle' && (
+                  <motion.div
+                    initial={{ opacity: 0, y: 20 }}
+                    animate={{ opacity: 1, y: 0 }}
+                    exit={{ opacity: 0, y: -20 }}
+                    className={`text-center p-4 rounded-lg ${
+                      submitStatus === 'success' 
+                        ? 'bg-green-500/20 text-green-700 dark:text-green-300 border border-green-500/30' 
+                        : 'bg-red-500/20 text-red-700 dark:text-red-300 border border-red-500/30'
+                    }`}
+                  >
+                    <div className="flex items-center justify-center gap-2">
+                      {submitStatus === 'success' ? (
+                        <CheckCircle size={20} />
+                      ) : (
+                        <AlertCircle size={20} />
+                      )}
+                      <span>{submitMessage}</span>
+                    </div>
+                  </motion.div>
+                )}
               </motion.form>
             </div>
           </motion.div>
@@ -667,6 +823,8 @@ When I’m not coding, you can usually find me exploring new design trends, expe
           </motion.p>
         </div>
       </motion.footer>
+      
+      <PerformanceMonitor />
     </div>
   )
 }
