@@ -429,7 +429,13 @@ export default function Portfolio() {
                   {[Github, Linkedin, Mail].map((Icon, index) => (
                     <motion.a
                       key={index}
-                      href="#"
+                      href={index === 0 ? "https://github.com/yourusername" : index === 1 ? "https://www.linkedin.com/in/arsalan-reshi-5862a5346?utm_source=share&utm_campaign=share_via&utm_content=profile&utm_medium=ios_app" : "mailto:zees27025@gmail.com"}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      initial={{ opacity: 0, scale: 0.8 }}
+                      whileInView={{ opacity: 1, scale: 1 }}
+                      viewport={{ once: true }}
+                      transition={{ delay: index * 0.2 + 1, duration: 0.4 }}
                       whileHover={{ scale: 1.3, rotate: 10, y: -5 }}
                       whileTap={{ scale: 0.9 }}
                       transition={{
